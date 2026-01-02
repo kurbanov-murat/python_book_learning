@@ -9,7 +9,7 @@ START_SCORE = 50
 
 
 # === ФУНКЦИЯ СОЗДАНИЯ СТАНДАРТНОЙ КОЛОДЫ ===
-def createDeck():
+def create_deck():
     """ Создает стандартную колоду карт. Возвращает список словарей с картами."""
     deck = []
     for suit in SUITS:
@@ -20,7 +20,7 @@ def createDeck():
 
 
 # === ФУНКЦИЯ ДЛЯ ПЕРЕМЕШИВАНИЯ КОЛОДЫ ===
-def shuffleDeck(deck):
+def shuffle_deck(deck):
     """ Возвращает перемешанную копию колоды. Исходная колода не изменяется."""
     shuffled = deck.copy()
     random.shuffle(shuffled)
@@ -28,7 +28,7 @@ def shuffleDeck(deck):
 
 
 # === ФУНКЦИЯ ВЫТЯГИВАНИЯ КАРТЫ ===
-def drawCard(deck):
+def draw_card(deck):
     """ Убирает верхнюю карту из колоды и возвращает ее."""
     return deck.pop()
 

@@ -27,6 +27,12 @@ def shuffleDeck(deck):
     return shuffled
 
 
+# === ФУНКЦИЯ ВЫТЯГИВАНИЯ КАРТЫ ===
+def drawCard(deck):
+    """ Убирает верхнюю карту из колоды и возвращает ее."""
+    return deck.pop()
+
+
 # === ОСНОВНОЙ КОД ===
 def main():
     print('Welcome to Higher or Lower!')

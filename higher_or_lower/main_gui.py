@@ -14,11 +14,17 @@ game.start()
 
 # создаём окно
 root = tk.Tk()
-root.title("High / Low Card Game")
+root.title("High or Low")
 
+# подключаем иконнку
+icon_path = os.path.join("images/icons", "joker.png")
+root.iconphoto(False, tk.PhotoImage(file=icon_path))
 
-# Возвращает PhotoImage карты для Tkinter card - объект Card width/height - размер в пикселях
-def get_card_image(card, width=200, height=285):
+# Размеры фото карт
+cards_width, cards_height = 200, 280
+
+# Функция возвращает PhotoImage карты для Tkinter card - объект Card width/height - размер в пикселях
+def get_card_image(card, width=cards_width, height=cards_height):
     path = os.path.join("images/cards", f"{card.rank.lower()}_of_{card.suit.lower()}.png")
 
     if not os.path.exists(path):
@@ -28,46 +34,76 @@ def get_card_image(card, width=200, height=285):
     img = img.resize((width, height), Image.Resampling.LANCZOS)
     return ImageTk.PhotoImage(img)
 
-
-# Изначально загружаем изображение первой карты
-current_card_image = get_card_image(game.current_card)
-card_label = tk.Label(root, image=current_card_image)
-card_label.pack(pady=10)
-
-score_label = tk.Label(root, text=f"Очки: {game.score}", font=("Arial", 14))
-score_label.pack(pady=10)
-
-
 # Функции для кнопок
 def guess_higher():
     is_correct, next_card = game.guess(True)
-    update_ui(next_card)
-
+    update_ui(next_card, last_correct=is_correct)
 
 def guess_lower():
     is_correct, next_card = game.guess(False)
-    update_ui(next_card)
+    update_ui(next_card, last_correct=is_correct)
 
+def update_ui(next_card, last_correct=None):
+    global current_card_image
 
-def update_ui(next_card):
-    global current_card_image  # нужно, чтобы Tkinter не удалял изображение
-    # Обновляем изображение карты
+    if last_correct is not None:
+        # Показываем картинку результата
+        if last_correct:
+            card_label.config(image=correct_card_image)
+        else:
+            card_label.config(image=wrong_card_image)
+
+        # Через 1 секунду показываем следующую карту
+        root.after(1000, lambda: show_next_card(next_card))
+    else:
+        show_next_card(next_card)
+
+def show_next_card(next_card):
+    global current_card_image
+
+    # Проверка конца игры
+    if len(game.deck) == 0:
+        card_label.config(image=no_cards_image)
+        higher_button.config(state="disabled")
+        lower_button.config(state="disabled")
+        score_label.config(text=f"Очки: {game.score}")
+        return
+    elif game.score <= 0:
+        card_label.config(image=no_score_image)
+        higher_button.config(state="disabled")
+        lower_button.config(state="disabled")
+        score_label.config(text=f"Очки: {game.score}")
+        return
+
+    # Показываем карту
     current_card_image = get_card_image(next_card)
     card_label.config(image=current_card_image)
 
     # Обновляем счёт
     score_label.config(text=f"Очки: {game.score}")
 
-    # Проверка конца игры
-    if len(game.deck) == 0:
-        card_label.config(text="Карты закончились!", image="")
-        higher_button.config(state="disabled")
-        lower_button.config(state="disabled")
-    elif game.score <= 0:
-        card_label.config(text="Очки закончились!", image="")
-        higher_button.config(state="disabled")
-        lower_button.config(state="disabled")
 
+# Загружаем изображение первой карты
+current_card_image = get_card_image(game.current_card)
+card_label = tk.Label(root, image=current_card_image)
+card_label.pack(pady=10)
+
+# Загружаем карты результата
+correct_card_image = Image.open("images/icons/right.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
+correct_card_image = ImageTk.PhotoImage(correct_card_image)
+
+wrong_card_image = Image.open("images/icons/wrong.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
+wrong_card_image = ImageTk.PhotoImage(wrong_card_image)
+
+# Загружаем картинки конца игры
+no_cards_image = Image.open("images/icons/end_cards.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
+no_cards_image = ImageTk.PhotoImage(no_cards_image)
+
+no_score_image = Image.open("images/icons/end_cards.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
+no_score_image = ImageTk.PhotoImage(no_score_image)
+
+score_label = tk.Label(root, text=f"Очки: {game.score}", font=("Arial", 14))
+score_label.pack(pady=10)
 
 # Кнопки
 higher_button = tk.Button(root, text="Выше", command=guess_higher, width=10)
@@ -77,4 +113,3 @@ lower_button = tk.Button(root, text="Ниже", command=guess_lower, width=10)
 lower_button.pack(side="right", padx=20, pady=20)
 
 root.mainloop()
-

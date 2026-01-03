@@ -1,3 +1,4 @@
 **/__pycache__/
 *.pyc
 DEV_NOTES.txt
+test.py

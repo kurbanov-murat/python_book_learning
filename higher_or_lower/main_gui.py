@@ -15,6 +15,7 @@ game.start()
 # создаём окно
 root = tk.Tk()
 root.title("High or Low")
+root.configure(bg="#0B3D0B")
 
 # подключаем иконнку
 icon_path = os.path.join("images/icons", "joker.png")
@@ -82,11 +83,10 @@ def show_next_card(next_card):
     # Обновляем счёт
     score_label.config(text=f"Очки: {game.score}")
 
-
 # Загружаем изображение первой карты
 current_card_image = get_card_image(game.current_card)
 card_label = tk.Label(root, image=current_card_image)
-card_label.pack(pady=10)
+card_label.pack(padx=20, pady=20)
 
 # Загружаем карты результата
 correct_card_image = Image.open("images/icons/right.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
@@ -102,14 +102,20 @@ no_cards_image = ImageTk.PhotoImage(no_cards_image)
 no_score_image = Image.open("images/icons/end_cards.png").resize((cards_width, cards_height), Image.Resampling.LANCZOS)
 no_score_image = ImageTk.PhotoImage(no_score_image)
 
-score_label = tk.Label(root, text=f"Очки: {game.score}", font=("Arial", 14))
-score_label.pack(pady=10)
+score_label = tk.Label(
+    root,
+    text=f"Очки: {game.score}",
+    font=("Arial", 16, "bold"),
+    fg="white",                 # цвет текста белый
+    bg=root["bg"],               # берём фон окна, выглядит как прозрачный
+)
+score_label.pack(expand=True)
 
 # Кнопки
-higher_button = tk.Button(root, text="Выше", command=guess_higher, width=10)
-higher_button.pack(side="left", padx=20, pady=20)
+higher_button = tk.Button(root, text="Выше", command=guess_higher, width=8, bg=root["bg"], fg="white", font="bold",bd=5)
+higher_button.pack(side="right", padx=20, pady=20)
 
-lower_button = tk.Button(root, text="Ниже", command=guess_lower, width=10)
-lower_button.pack(side="right", padx=20, pady=20)
+lower_button = tk.Button(root, text="Ниже", command=guess_lower, width=8, bg=root["bg"], fg="white", font="bold", bd=5)
+lower_button.pack(side="left", padx=20, pady=20)
 
 root.mainloop()

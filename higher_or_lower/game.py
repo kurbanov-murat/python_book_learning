@@ -68,7 +68,7 @@ class Game:
         next_card = self.deck.draw()
         assert self.current_card is not None, "Игра ещё не начата!"
 
-        is_correct = (next_card.value > self.current_card.value) if higher else (next_card.value < self.current_card.value)
+        is_correct = (next_card.value >= self.current_card.value) if higher else (next_card.value <= self.current_card.value)
 
         if is_correct:
             self.score += 20
